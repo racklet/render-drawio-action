@@ -1,0 +1,35 @@
+name: 'draw.io rendering action'
+description: 'Render .drawio files to any of png,svg,pdf,jpg automatically'
+inputs:
+  formats:
+    description: 'A comma-separated list of the formats to render. Supported formats are: `svg,pdf,png,jpg`.'
+    required: false
+    default: "svg"
+  sub-dirs:
+    description: 'A comma-separated list of what directories to search for .drawio files'
+    required: false
+    default: '.'
+  skip-dirs:
+    description: 'A comma-separated list of what directories to skip when searching for .drawio files'
+    required: false
+    default: '.git'
+  files:
+    description: 'A comma-separated list of specific files to convert, in the form: "dest-file:src-file"'
+    required: false
+    default: "=" # empty key-value mapping means no files
+  log-level:
+    description: 'What log level to use. Used levels are "info" and "debug".'
+    required: false
+    default: "info"
+outputs:
+  rendered-files:
+    description: 'A space-separated list of files that were rendered, can be passed to e.g. "git add"'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+  - --sub-dirs=${{ inputs.sub-dirs }}
+  - --skip-dirs=${{ inputs.skip-dirs }}
+  - --files=${{ inputs.files }}
+  - --formats=${{ inputs.formats }}
+  - --log-level=${{ inputs.log-level }}
