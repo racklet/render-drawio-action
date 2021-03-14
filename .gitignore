@@ -163,3 +163,10 @@ tmp
 *.log*
 dist
 out
+
+# Custom:
+# Ignore test/foo.{png,pdf,svg,jpg} for e2e testing
+test/foo.png
+test/foo.pdf
+test/foo.svg
+test/foo.jpg
