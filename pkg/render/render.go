@@ -243,3 +243,20 @@ func GitHubActionSetOutput(key, val string) {
 	zap.S().Infow("Setting Github Action output", key, val)
 	fmt.Printf("::set-output name=%s::%s\n", key, val)
 }
+
+func GitHubActionSetFilesOutput(key, rootDir string, files []string) error {
+	// Only run filepath.Rel if rootDir != ""
+	if len(rootDir) != 0 {
+		var err error
+		for i := range files {
+			// Make the file path relative to root dir
+			files[i], err = filepath.Rel(rootDir, files[i])
+			if err != nil {
+				return err
+			}
+		}
+	}
+	// Run the generic function
+	GitHubActionSetOutput(key, strings.Join(files, " "))
+	return nil
+}

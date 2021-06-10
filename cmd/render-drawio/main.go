@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/racklet/render-drawio-action/pkg/render"
@@ -85,7 +84,5 @@ func run() error {
 	}
 
 	// Set the GH Action output
-	render.GitHubActionSetOutput("rendered-files", strings.Join(outputFiles, " "))
-
-	return nil
+	return render.GitHubActionSetFilesOutput("rendered-files", cfg.RootDir, outputFiles)
 }
