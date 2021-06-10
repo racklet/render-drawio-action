@@ -1,6 +1,8 @@
 FROM golang:1.16-alpine as builder
 WORKDIR /build
 COPY . .
+# Make sure tests pass before building :)
+RUN CGO_ENABLED=0 go test ./...
 RUN CGO_ENABLED=0 go build -a -o render-drawio ./cmd/render-drawio
 
 FROM rlespinasse/drawio-desktop-headless:1.0.1

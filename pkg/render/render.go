@@ -257,6 +257,13 @@ func GitHubActionSetFilesOutput(key, rootDir string, files []string) error {
 		}
 	}
 	// Run the generic function
-	GitHubActionSetOutput(key, strings.Join(files, " "))
+	GitHubActionSetOutput(key, joinQuotedStrings(files))
 	return nil
+}
+
+func joinQuotedStrings(strs []string) string {
+	for i := range strs {
+		strs[i] = fmt.Sprintf("%q", strs[i])
+	}
+	return strings.Join(strs, " ")
 }
