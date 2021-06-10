@@ -94,9 +94,11 @@ Example:
 
 ## Usage Example
 
-The following example Github Action pushes a new commit with the generated files.
+The following example GitHub Action pushes a new commit with the generated files.
 
 ```yaml
+name: Render draw.io files
+
 on: [push]
 
 jobs:
@@ -107,7 +109,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Render draw.io files
-      uses: ghcr.io/racklet/render-drawio-action@v1
+      uses: docker://ghcr.io/racklet/render-drawio-action:v1
       id: render
       with: # Showcasing the default values here
         formats: 'svg'
@@ -124,6 +126,7 @@ jobs:
         author_email: 41898282+github-actions[bot]@users.noreply.github.com
         message: 'Automatically render .drawio files'
         add: "${{ steps.render.outputs.rendered-files }}"
+      if: "${{ steps.render.outputs.rendered-files != ''}}"
 ```
 
 ## Docker
