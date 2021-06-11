@@ -109,7 +109,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Render draw.io files
-      uses: docker://ghcr.io/racklet/render-drawio-action:v1
+      uses: docker://ghcr.io/racklet/render-drawio-action:v1.0.3
       id: render
       with: # Showcasing the default values here
         formats: 'svg'
@@ -117,8 +117,8 @@ jobs:
         skip-dirs: '.git'
         # files: '' # unset, specify "dest-file:src-file" mappings here
         log-level: 'info'
-    - name: Print the rendered files
-      run: 'echo "The following files were generated: ${{ steps.render.outputs.rendered-files }}"'
+    - name: List the rendered files
+      run: 'ls -l ${{ steps.render.outputs.rendered-files }}'
     - uses: EndBug/add-and-commit@v7
       with:
         # This "special" author name and email will show up as the GH Actions user/bot in the UI
