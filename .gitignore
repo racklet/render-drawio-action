@@ -165,8 +165,8 @@ dist
 out
 
 # Custom:
-# Ignore test/foo.{png,pdf,svg,jpg} for e2e testing
-test/foo.png
-test/foo.pdf
-test/foo.svg
-test/foo.jpg
+# Ignore test/foo 1.{png,pdf,svg,jpg} for e2e testing
+test/foo 1.png
+test/foo 1.pdf
+test/foo 1.svg
+test/foo 1.jpg

@@ -68,7 +68,7 @@ func run() error {
 	// Render the files using the drawio CLI
 	err := cfg.Render(func(src, dest string) error {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		out, _, err := render.ShellCommand(ctx, "/opt/draw.io/drawio -x -t %s -o %s --no-sandbox", src, dest).Run()
+		out, _, err := render.ShellCommand(ctx, "/opt/draw.io/drawio -x -t %q -o %q --no-sandbox", src, dest).Run()
 		cancel()
 		if err != nil {
 			return fmt.Errorf("failed to run drawio for src=%q and dest=%q: %v, output: %s", src, dest, err, string(out))

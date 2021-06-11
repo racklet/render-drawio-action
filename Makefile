@@ -4,6 +4,8 @@ IMAGE_NAME ?= render-drawio-action
 IMAGE = $(REGISTRY)/$(OWNER)/$(IMAGE_NAME)
 TAG ?= 
 SHELL:=/bin/bash
+# Test using a file with a whitespace in it
+TEST_FILE_BASE="test/foo 1"
 
 all: build
 resolve-git-version:
@@ -42,4 +44,4 @@ test: build
 	$(MAKE) verify
 
 verify:
-	@/bin/bash -c '[ -f test/foo.svg ] && [ -f test/foo.png ] && [ -f test/foo.pdf ] && [ -f test/foo.jpg ] && echo "Files generated!" || (echo "e2e files not generated" && exit 1)'
+	@/bin/bash -c '[ -f $(TEST_FILE_BASE).svg ] && [ -f $(TEST_FILE_BASE).png ] && [ -f $(TEST_FILE_BASE).pdf ] && [ -f $(TEST_FILE_BASE).jpg ] && echo "Files generated!" || (echo "e2e files not generated" && exit 1)'
