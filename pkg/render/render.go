@@ -14,15 +14,15 @@ import (
 )
 
 func init() {
-	// Setup logger. It seems that as logLevel is a pointer it works to write to it in a bit later stage
+	// Setup logger. It seems that as logLevel is a pointer it works to write to it at a bit later stage.
 	log := zap.NewExample().WithOptions(zap.IncreaseLevel(logLevel))
 	defer func() { _ = log.Sync() }()
 	zap.ReplaceGlobals(log)
 }
 
 var (
-	// register the log-level flag natively to the stdlib flag package
-	logLevel = zap.LevelFlag("log-level", zap.InfoLevel, "What log level to use")
+	// Register the log-level flag natively to the stdlib flag package
+	logLevel = zap.LevelFlag("log-level", zap.InfoLevel, "Application log level")
 )
 
 // RenderFunc renders the source file to the destination file. Both paths are absolute.
@@ -215,11 +215,11 @@ func (c *Config) Render(fn RenderFunc) error {
 }
 
 func DefaultFlags(cfg *Config) {
-	pflag.StringVarP(&cfg.RootDir, "root-dir", "r", cfg.RootDir, "Where the root directory for the files that should be rendered are.")
+	pflag.StringVarP(&cfg.RootDir, "root-dir", "r", cfg.RootDir, "The root of the directory structure where the files to be rendered reside")
 	pflag.StringSliceVarP(&cfg.SubDirs, "sub-dirs", "d", cfg.SubDirs, "Comma-separated list of sub-directories of --root-dir to recursively search for files to render")
-	pflag.StringSliceVarP(&cfg.SkipDirs, "skip-dirs", "s", cfg.SkipDirs, "Comma-separated list of sub-directories of --root-dir to skip when recursively checking for files to convert")
+	pflag.StringSliceVarP(&cfg.SkipDirs, "skip-dirs", "s", cfg.SkipDirs, "Comma-separated list of sub-directories of --root-dir to skip when recursively checking for files to render")
 
-	pflag.StringToStringVarP(&cfg.Files, "files", "f", cfg.Files, fmt.Sprintf("Comma-separated list of files to render, of form 'dest-file=src-file'. The extension for src-file can be any of %s, and for dest-file any of %s", cfg.ValidSrcFormats, cfg.ValidDestFormats))
+	pflag.StringToStringVarP(&cfg.Files, "files", "f", cfg.Files, fmt.Sprintf("Comma-separated list of files to render, of form 'dest-file:src-file'. The extension for src-file can be any of %s, and for dest-file any of %s", cfg.ValidSrcFormats, cfg.ValidDestFormats))
 
 	pflag.StringSliceVar(&cfg.DestFormats, "formats", cfg.DestFormats, "Comma-separated list of formats to render the files as, for use with --subdirs")
 }
