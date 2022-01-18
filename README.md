@@ -28,7 +28,7 @@ A GitHub Action for rendering `*.drawio` files generated with [diagrams.net](htt
 
 ### `formats`
 
-**Optional:** A comma-separated list of the formats to render. Supported formats are: `svg,pdf,png,jpg`.
+**Optional:** A comma-separated list of the formats to render. All supported formats: `svg,pdf,png,jpg`
 
 **Default:** `svg`
 
@@ -40,7 +40,7 @@ Examples:
 
 ### `sub-dirs`
 
-**Optional:** A comma-separated list of paths in the repository to consider when searching for `.drawio` files
+**Optional:** A comma-separated list of directories to consider when searching for `.drawio` files
 
 **Default:** `.`
 
@@ -51,7 +51,7 @@ Examples:
 
 ### `skip-dirs`
 
-**Optional:** A comma-separated list of directories to skip when searching for .drawio files
+**Optional:** A comma-separated list of directories to skip when searching for `.drawio` files
 
 **Default:** `.git`
 
@@ -62,7 +62,7 @@ Examples:
 
 ### `files`
 
-**Optional:** A comma-separated list of specific files to convert, in the form `dest-file:src-file`
+**Optional:** A comma-separated list of specific files to convert, in the form `dest-file=src-file`
 
 **Default:** Empty
 
@@ -73,7 +73,7 @@ Examples:
 
 ### `log-level`
 
-**Optional:** What log level to use. Recognized levels are `info` and `debug`.
+**Optional:** Specify the log level, recognized levels are `info` and `debug`
 
 **Default:** `info`
 
@@ -114,7 +114,7 @@ jobs:
         formats: 'svg'
         sub-dirs: '.'
         skip-dirs: '.git'
-        # files: '' # unset, specify `dest-file:src-file` mappings here
+        # files: '' # unset, specify `dest-file=src-file` mappings here
         log-level: 'info'
       id: render
     - name: List the rendered files
@@ -167,17 +167,16 @@ Other interesting resources include:
 - [The discussions forum](https://github.com/racklet/racklet/discussions)
 - [The list of milestones](https://github.com/racklet/racklet/milestones)
 - [The roadmap](https://github.com/orgs/racklet/projects/1)
-- [The changelog](CHANGELOG.md)
 
 ## Getting Help
 
 If you have any questions about, feedback for or problems with Racklet:
 
 - Invite yourself to the [Open Source Firmware Slack](https://slack.osfw.dev/).
-- Ask a question on the [#racklet](https://osfw.slack.com/messages/racklet/) slack channel.
+- Ask a question on the [#racklet](https://osfw.slack.com/messages/racklet/) Slack channel.
 - Ask a question on the [discussions forum](https://github.com/racklet/racklet/discussions).
 - [File an issue](https://github.com/racklet/racklet/issues/new).
-- Join our [community meetings](https://hackmd.io/@racklet/Sk8jHHc7_) (see also the [meeting-notes](https://github.com/racklet/meeting-notes) repo).
+- Join our [community meetings](https://github.com/racklet/meeting-notes).
 
 Your feedback is always welcome!
 
