@@ -5,30 +5,30 @@ A GitHub Action for rendering `*.drawio` files generated with [diagrams.net](htt
 ## How to use
 
 1. Go to [diagrams.net](https://www.diagrams.net/)
-2. Choose to "Save diagrams to" GitHub
-   - <img src="docs/images/2.png" width="300"/>
-3. Choose "Create New Diagram" or "Open Existing Diagram", depending on what you want to do
-   - <img src="docs/images/3.png" width="300"/>
+2. Choose to `Save diagrams to:` GitHub
+   - <img src="docs/images/save_diagrams_dialog.png" alt="Save diagrams dialog" style="vertical-align:middle;width:300px"/>
+3. Choose `Create New Diagram` or `Open Existing Diagram`, depending on what you want to do
+   - <img src="docs/images/open_diagram_dialog.png" alt="Open diagram dialog" style="vertical-align:middle;width:300px"/>
 4. Authorize the app through OAuth2 if asked
-   - <img src="docs/images/4.png" width="300"/>
-5. Choose what repository you want to browse for files in
-6. Choose what branch the file you want to edit is on (the branch already needs to exist)
-7. Choose what file you want to edit (or create) in that repository folder structure (`special-computing-machine` here is just an example; you can choose any repo you have given draw.io access to)
-   - <img src="docs/images/7.png" width="300"/>
-8. You will now see the online editor; you can now edit your diagram as you like
-   - ![diagrams.net editor](docs/images/8.png)
-9. When you make any changes; you will see a "Unsaved changes. Click here to save"-button.
-   - ![diagrams.net editor](docs/images/9.png)
-10. When you are ready to save your changes into a commit, click that button and write your commit message.
-11. A commit has now been created to the given branch on your behalf.
-    - ![diagrams.net editor](docs/images/11.png)
-12. This GitHub Action detects the change, and automatically renders the "raw" `.drawio` file into the format of your liking
+   - <img src="docs/images/authorize_github_dialog.png" alt="Authorize GitHub dialog" style="vertical-align:middle;width:300px"/>
+5. Choose a repository you want to browse files in
+6. Choose the branch the file you want to edit is in (the branch needs to already exist)
+7. Choose the file you want to edit (or create) in that repository folder structure (`special-computing-machine` here is just an example, you can choose any repo you have given diagrams.net access to)
+   - <img src="docs/images/select_file_dialog.png" alt="Select file dialog" style="vertical-align:middle;width:300px"/>
+8. You will now see the online editor, feel free to edit your diagram as you like
+   - <img src="docs/images/example_diagram.png" alt="Example diagram" style="vertical-align:middle;width:800px"/>
+9. As you make changes you will see a button stating `Unsaved changes. Click here to save.` appear
+    - <img src="docs/images/unsaved_changes_button.png" alt="Unsaved changes button" style="vertical-align:middle;width:800px"/>
+10. When you are ready to save your changes into a commit, click that button and write your commit message
+11. A commit has now been created in the given branch on your behalf
+    - <img src="docs/images/diagrams_net_commit.png" alt="diagrams.net commit" style="vertical-align:middle;width:800px"/>
+12. This GitHub Action detects the change, and automatically renders the "raw" `.drawio` file into the format(s) of your liking
 
 ## Inputs
 
 ### `formats`
 
-**Optional:** A comma-separated list of the formats to render. Supported formats are: `svg,pdf,png,jpg`.
+**Optional:** A comma-separated list of the formats to render. All supported formats: `svg,pdf,png,jpg`
 
 **Default:** `svg`
 
@@ -40,7 +40,7 @@ Examples:
 
 ### `sub-dirs`
 
-**Optional:** A comma-separated list of what directories to search for .drawio files
+**Optional:** A comma-separated list of directories to consider when searching for `.drawio` files
 
 **Default:** `.`
 
@@ -51,7 +51,7 @@ Examples:
 
 ### `skip-dirs`
 
-**Optional:** A comma-separated list of what directories to skip when searching for .drawio files
+**Optional:** A comma-separated list of directories to skip when searching for `.drawio` files
 
 **Default:** `.git`
 
@@ -62,7 +62,7 @@ Examples:
 
 ### `files`
 
-**Optional:** A comma-separated list of specific files to convert, in the form: "dest-file:src-file"
+**Optional:** A comma-separated list of specific files to convert, in the form `dest-file=src-file`
 
 **Default:** Empty
 
@@ -73,7 +73,7 @@ Examples:
 
 ### `log-level`
 
-**Optional:** What log level to use. Recognized levels are "info" and "debug".
+**Optional:** Specify the log level, recognized levels are `info` and `debug`
 
 **Default:** `info`
 
@@ -86,7 +86,7 @@ Examples:
 
 ### `rendered-files`
 
-A space-separated list of files that were rendered, can be passed to e.g. "git add"
+A space-separated list of files that were rendered, can be passed to e.g. `git add`
 
 Example:
 
@@ -94,36 +94,36 @@ Example:
 
 ## Usage Example
 
-The following example GitHub Action pushes a new commit with the generated files.
+The following example GitHub Actions workflow pushes a new commit with the generated files.
 
 ```yaml
-name: Render draw.io files
+name: Render .drawio files
 
 on: [push]
 
 jobs:
   render_drawio:
     runs-on: ubuntu-latest
-    name: Render draw.io files
+    name: Render .drawio files
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Render draw.io files
-      uses: docker://ghcr.io/racklet/render-drawio-action:v1.0.3
-      id: render
+    - name: Render .drawio files
+      uses: docker://ghcr.io/racklet/render-drawio-action:v1
       with: # Showcasing the default values here
         formats: 'svg'
         sub-dirs: '.'
         skip-dirs: '.git'
-        # files: '' # unset, specify "dest-file:src-file" mappings here
+        # files: '' # unset, specify `dest-file=src-file` mappings here
         log-level: 'info'
+      id: render
     - name: List the rendered files
       run: 'ls -l ${{ steps.render.outputs.rendered-files }}'
-    - uses: EndBug/add-and-commit@v7
+    - name: Commit the rendered files
+      uses: EndBug/add-and-commit@v7
       with:
-        # This "special" author name and email will show up as the GH Actions user/bot in the UI
-        author_name: github-actions
-        author_email: 41898282+github-actions[bot]@users.noreply.github.com
+        # This makes the GH Actions user/bot the author of the commit
+        default_author: github_actor
         message: 'Automatically render .drawio files'
         add: "${{ steps.render.outputs.rendered-files }}"
       if: "${{ steps.render.outputs.rendered-files != ''}}"
@@ -131,10 +131,10 @@ jobs:
 
 ## Docker
 
-You can use it standalone as well, through the Docker container:
+You can use it standalone as well, by running the Docker container directly:
 
 ```console
-$ docker run -it -v $(pwd):/files ghcr.io/racklet/render-drawio-action:v1 --help
+$ docker run -it -v $(pwd):/files ghcr.io/racklet/render-drawio-action:v1 --help
 Usage of /render-drawio:
   -f, --files stringToString   Comma-separated list of files to render, of form 'dest-file=src-file'. The extension for src-file can be any of [drawio *], and for dest-file any of [pdf png jpg svg] (default [])
       --formats strings        Comma-separated list of formats to render the *.drawio files as, for use with --subdirs (default [svg])
@@ -145,7 +145,7 @@ Usage of /render-drawio:
 pflag: help requested
 ```
 
-Sample Docker usage:
+Sample usage with Docker:
 
 ```console
 $ docker run -it -v $(pwd):/files ghcr.io/racklet/render-drawio-action:v1
@@ -167,17 +167,16 @@ Other interesting resources include:
 - [The discussions forum](https://github.com/racklet/racklet/discussions)
 - [The list of milestones](https://github.com/racklet/racklet/milestones)
 - [The roadmap](https://github.com/orgs/racklet/projects/1)
-- [The changelog](CHANGELOG.md)
 
 ## Getting Help
 
 If you have any questions about, feedback for or problems with Racklet:
 
 - Invite yourself to the [Open Source Firmware Slack](https://slack.osfw.dev/).
-- Ask a question on the [#racklet](https://osfw.slack.com/messages/racklet/) slack channel.
+- Ask a question on the [#racklet](https://osfw.slack.com/messages/racklet/) Slack channel.
 - Ask a question on the [discussions forum](https://github.com/racklet/racklet/discussions).
 - [File an issue](https://github.com/racklet/racklet/issues/new).
-- Join our [community meetings](https://hackmd.io/@racklet/Sk8jHHc7_) (see also the [meeting-notes](https://github.com/racklet/meeting-notes) repo).
+- Join our [community meetings](https://github.com/racklet/meeting-notes).
 
 Your feedback is always welcome!
 

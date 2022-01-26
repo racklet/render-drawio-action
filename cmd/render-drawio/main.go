@@ -45,10 +45,12 @@ func run() error {
 	log := zap.S()
 
 	// Refer to https://github.com/rlespinasse/docker-drawio-desktop-headless/blob/v1.x/scripts/entrypoint.sh
-	// and https://github.com/rlespinasse/docker-drawio-desktop-headless/blob/v1.x/scripts/runner.sh why things
-	// are done in this way.
+	// and https://github.com/rlespinasse/docker-drawio-desktop-headless/blob/v1.x/scripts/runner.sh to know
+	// why things are done in this way.
 	displayEnv := os.Getenv("XVFB_DISPLAY")
-	os.Setenv("DISPLAY", displayEnv)
+	if err := os.Setenv("DISPLAY", displayEnv); err != nil {
+		return err
+	}
 
 	go func() {
 		ctx := context.Background()
@@ -58,28 +60,28 @@ func run() error {
 		}
 	}()
 
-	// Just make sure Xvfb has a little bit of time to start up. We can't anyways get a "ready signal" from it,
-	// it just runs in the background, but assume a second should be enough
+	// Just make sure Xvfb has a bit of time to start up. We anyway can't get a "ready signal" from it,
+	// it just runs in the background, so assume that a second is enough.
 	time.Sleep(1 * time.Second)
 
-	// Make outputFiles as large as there are files
+	// Make outputFiles as large as the set of input files
 	outputFiles := make([]string, 0, len(cfg.Files))
 
 	// Render the files using the drawio CLI
-	err := cfg.Render(func(src, dest string) error {
+	if err := cfg.Render(func(src, dest string) error {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		out, _, err := render.ShellCommand(ctx, "/opt/draw.io/drawio -x -t %q -o %q --no-sandbox", src, dest).Run()
+		out, _, err := render.ShellCommand(ctx, "%q -x -t %q -o %q --no-sandbox",
+			os.Getenv("DRAWIO_DESKTOP_RUNNER_COMMAND_LINE"), src, dest).Run()
 		cancel()
 		if err != nil {
-			return fmt.Errorf("failed to run drawio for src=%q and dest=%q: %v, output: %s", src, dest, err, string(out))
+			return fmt.Errorf("failed to run drawio for src=%q and dest=%q: %v, output: %s", src, dest, err, out)
 		}
 
 		// The output file does not include the root directory prefix
 		outputFiles = append(outputFiles, dest)
 
 		return nil
-	})
-	if err != nil {
+	}); err != nil {
 		return err
 	}
 

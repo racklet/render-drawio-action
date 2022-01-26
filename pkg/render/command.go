@@ -1,9 +1,9 @@
 package render
 
 // This file is partly copied from
-// https://github.com/cloud-native-nordics/workshopctl/blob/9ff2a0dd74e4e01ec3f148f712b8a503ad40062c/pkg/util/util.go
+// https://github.com/cloud-native-nordics/workshopctl/blob/9ff2a0dd74e4e01ec3f148f712b8a503ad40062c/pkg/util/util.go.
 // However, I, @luxas, authored this code in the first place, and workshopctl is also Apache 2.0 licensed.
-// Some time I'll just make a standalone repo for this.
+// At some point in time I'll just make a standalone repo for this.
 
 import (
 	"bytes"
